@@ -278,13 +278,17 @@
     return typeof part === "string" && /\d/.test(part) && !/[א-תA-Za-z]/.test(part);
   }
 
+  function flipParentheses(text) {
+    return text.replace(/[()]/g, ch => ch === "(" ? ")" : "(");
+  }
+
   function renderQuestionSegment(part) {
     const classes = ["question-segment"];
     if (isMathSegment(part)) {
       classes.push("question-segment-math");
     }
 
-    return `<span class="${classes.join(" ")}">${escapeHtml(part)}</span>`;
+    return `<span class="${classes.join(" ")}">${escapeHtml(flipParentheses(part))}</span>`;
   }
 
   function renderQuestionPreview(question) {

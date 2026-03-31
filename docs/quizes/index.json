@@ -14,5 +14,13 @@
   {
     "id": "advanced-multiplication-100",
     "file": "כפל מתקדם עד 100.json"
+  },
+  {
+    "id": "order-of-operations",
+    "file": "סדר פעולות חשבון.json"
+  }, 
+  {
+    "id": "worded-questions-01", 
+    "file": "שאלות מילוליות 01.json"
   }
 ]
