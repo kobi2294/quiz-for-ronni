@@ -329,13 +329,13 @@
     const invalidField = normalizedAnswers.some((answer) => !/^[-+]?\d+$/.test(answer));
 
     if (emptyField) {
-      progressQuestion.feedback = "צריך למלא את כל התשובות לפני שלוחצים על בדיקה.";
+      progressQuestion.feedback = "✏️ צריך למלא את כל התשובות לפני שלוחצים על בדיקה.";
       render();
       return;
     }
 
     if (invalidField) {
-      progressQuestion.feedback = "אפשר להקליד כאן רק מספרים.";
+      progressQuestion.feedback = "🔢 אפשר להקליד כאן רק מספרים.";
       render();
       return;
     }
@@ -348,15 +348,15 @@
       progressQuestion.isCorrect = true;
       progressQuestion.status = "correct";
       progressQuestion.feedback = progressQuestion.attempts === 1
-        ? "מעולה. פתרת נכון כבר בניסיון הראשון."
-        : "כל הכבוד. הצלחת לתקן ולפתור נכון.";
+        ? "🌟 מעולה! פתרת נכון כבר בניסיון הראשון!"
+        : "👏 כל הכבוד! הצלחת לתקן ולפתור נכון!";
     } else if (progressQuestion.attempts >= 3) {
       progressQuestion.isLocked = true;
       progressQuestion.status = "locked";
-      progressQuestion.feedback = "ניסית שלוש פעמים. עכשיו אפשר לראות את התשובה הנכונה ולהמשיך.";
+      progressQuestion.feedback = "💪 ניסית שלוש פעמים. אפשר לראות את התשובה הנכונה ולהמשיך!";
     } else {
       progressQuestion.status = "wrong";
-      progressQuestion.feedback = `עדיין לא. זה ניסיון מספר ${progressQuestion.attempts}. אפשר לנסות שוב.`;
+      progressQuestion.feedback = `🤔 עדיין לא. זה ניסיון מספר ${progressQuestion.attempts}. אפשר לנסות שוב!`;
     }
 
     maybeCompleteQuiz(quizId);
@@ -436,7 +436,7 @@
           return `
             <button type="button" class="resume-banner" data-action="start-quiz" data-quiz-id="${quiz.id}">
               <div class="resume-banner-text">
-                <strong>${quiz.title}</strong>
+                <strong>⏳ ${quiz.title}</strong>
                 <span>שאלה ${currentNumber} מתוך ${quiz.questions.length} · ${completionRate}% הושלם</span>
               </div>
               <span class="resume-banner-action">להמשך ◀</span>
@@ -454,27 +454,27 @@
 
             <div class="top-row" style="justify-content:space-between; align-items:center;">
               <div class="tabs-row">
-                <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">משימות שלא עשיתי</button>
-                <button type="button" class="tab-button ${activeTab === "completed" ? "active" : ""}" data-tab="completed">משימות שעשיתי</button>
+                <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">📋 משימות שלא עשיתי</button>
+                <button type="button" class="tab-button ${activeTab === "completed" ? "active" : ""}" data-tab="completed">✅ משימות שעשיתי</button>
               </div>
             </div>
 
             <div class="tasks-grid">
-              ${listItems.length ? listItems.map(({ quiz, progress }) => renderTaskCard(quiz, progress, activeTab)).join("") : `<div class="empty-state">אין כרגע משימות ברשימה הזאת.</div>`}
+              ${listItems.length ? listItems.map(({ quiz, progress }) => renderTaskCard(quiz, progress, activeTab)).join("") : `<div class="empty-state">🎉 אין כרגע משימות ברשימה הזאת.</div>`}
             </div>
           </main>
 
           <aside class="home-sidebar">
             <div class="sidebar-stat">
-              <span class="sidebar-stat-value">${stats.completed.length}</span>
+              <span class="sidebar-stat-value">🏆 ${stats.completed.length}</span>
               <span class="sidebar-stat-label">משימות שסיימתי</span>
             </div>
             <div class="sidebar-stat">
-              <span class="sidebar-stat-value">${quizzes.length}</span>
+              <span class="sidebar-stat-value">📚 ${quizzes.length}</span>
               <span class="sidebar-stat-label">סה״כ משימות</span>
             </div>
             <div class="sidebar-stat">
-              <span class="sidebar-stat-value">${stats.average}%</span>
+              <span class="sidebar-stat-value">⭐ ${stats.average}%</span>
               <span class="sidebar-stat-label">ממוצע הצלחה</span>
             </div>
           </aside>
@@ -577,7 +577,7 @@
 
               <div class="feedback-box ${getFeedbackClass(progressQuestion)}">
                 <strong>${getFeedbackTitle(progressQuestion)}</strong>
-                <p class="feedback-text">${progressQuestion.feedback || "ממלאים את התשובות ולוחצים על בדיקה."}</p>
+                <p class="feedback-text">${progressQuestion.feedback || "✨ ממלאים את התשובות ולוחצים על בדיקה!"}</p>
                 ${progressQuestion.isLocked ? `<div class="correct-answer-row">התשובה הנכונה: ${question.answers.join(" ,")}</div>` : ""}
                 ${progressQuestion.attempts > 0 ? `<div class="correct-answer-row">מספר ניסיונות עד עכשיו: ${progressQuestion.attempts}</div>` : ""}
               </div>
@@ -709,46 +709,6 @@
     `;
   }
 
-  function renderSettingsView() {
-    const stats = getDerivedStats();
-
-    return `
-      <section class="view active">
-        <div class="settings-layout">
-          <section class="settings-card">
-            <p class="eyebrow">הגדרות מקומיות</p>
-            <h1 class="section-title">ניהול הנתונים שעל המחשב הזה</h1>
-            <p>כל הנתונים נשמרים רק בדפדפן המקומי. אפשר לאפס הכול אם רוצים להתחיל מהתחלה.</p>
-            <div class="settings-note">האיפוס מוחק התקדמות, תוצאות, ניסיונות והערות שנשמרו לכל המשימות.</div>
-            <div class="settings-actions" style="margin-top:18px;">
-              <button type="button" class="danger-button" data-action="reset-data">איפוס כל הנתונים</button>
-              <button type="button" class="secondary-button" data-action="go-home">חזרה לדף הבית</button>
-            </div>
-          </section>
-
-          <aside class="panel">
-            <p class="eyebrow">מצב נוכחי</p>
-            <h2 class="section-title">מה יימחק באיפוס</h2>
-            <div class="settings-grid">
-              <article class="stats-card">
-                <span class="stat-label">משימות שהושלמו</span>
-                <strong>${stats.completed.length}</strong>
-              </article>
-              <article class="stats-card">
-                <span class="stat-label">משימות בתהליך</span>
-                <strong>${stats.inProgress.length}</strong>
-              </article>
-              <article class="stats-card">
-                <span class="stat-label">משימות זמינות</span>
-                <strong>${quizzes.length}</strong>
-              </article>
-            </div>
-          </aside>
-        </div>
-      </section>
-    `;
-  }
-
   function renderProgressView() {
     const stats = getDerivedStats();
 
@@ -778,7 +738,6 @@
 
           <div class="result-actions" style="margin-top:18px;">
             <button type="button" class="secondary-button" data-action="go-home">חזרה לדף הבית</button>
-            <button type="button" class="ghost-button" data-action="open-settings">הגדרות</button>
           </div>
         </div>
       </section>
@@ -833,12 +792,6 @@
       return;
     }
 
-    if (viewName === "settings") {
-      app.innerHTML = renderSettingsView();
-      attachDynamicHandlers();
-      return;
-    }
-
     app.innerHTML = renderHomeView();
     attachDynamicHandlers();
   }
@@ -880,11 +833,6 @@
 
     if (action === "open-progress") {
       setRoute("progress");
-      return;
-    }
-
-    if (action === "open-settings") {
-      setRoute("settings");
       return;
     }
 
@@ -962,7 +910,6 @@
 
   document.getElementById("homeShortcut").addEventListener("click", () => setRoute("home"));
   document.getElementById("progressShortcut").addEventListener("click", () => setRoute("progress"));
-  document.getElementById("settingsShortcut").addEventListener("click", () => setRoute("settings"));
   window.addEventListener("hashchange", render);
 
   if (!window.location.hash) {
