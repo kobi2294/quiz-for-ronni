@@ -18,9 +18,49 @@
   {
     "id": "order-of-operations",
     "file": "סדר פעולות חשבון.json"
-  }, 
+  },
   {
-    "id": "worded-questions-01", 
+    "id": "worded-questions-01",
     "file": "שאלות מילוליות 01.json"
+  },
+  {
+    "id": "number-sequences",
+    "file": "השלמת סדרות מספרים.json"
+  },
+  {
+    "id": "addition-crossing-tens",
+    "file": "חיבור וחיסור עם מעבר עשרת.json"
+  },
+  {
+    "id": "round-multiplication",
+    "file": "כפל במספרים עגולים.json"
+  },
+  {
+    "id": "worded-questions-02",
+    "file": "שאלות מילוליות 02.json"
+  },
+  {
+    "id": "rounding-numbers",
+    "file": "עיגול מספרים.json"
+  },
+  {
+    "id": "basic-division",
+    "file": "חילוק בסיסי.json"
+  },
+  {
+    "id": "times-table-2-to-5",
+    "file": "לוח הכפל של 2 עד 5.json"
+  },
+  {
+    "id": "times-table-6-to-9",
+    "file": "לוח הכפל של 6 עד 9.json"
+  },
+  {
+    "id": "times-table-missing",
+    "file": "לוח הכפל - מספר חסר.json"
+  },
+  {
+    "id": "times-table-mixed",
+    "file": "לוח הכפל מעורבב.json"
   }
 ]
