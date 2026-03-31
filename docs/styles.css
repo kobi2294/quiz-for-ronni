@@ -120,91 +120,13 @@ button {
   padding: 22px 0 38px;
 }
 
-.app-shell::before,
-.app-shell::after {
-  content: "";
+.bg-shapes {
   position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
-}
-
-.app-shell::before {
-  width: 300px;
-  height: 300px;
-  top: 10%;
-  left: -80px;
-  background: radial-gradient(circle, rgba(156, 110, 255, 0.12), transparent 70%);
-  animation: float-slow 8s ease-in-out infinite;
-}
-
-.app-shell::after {
-  width: 220px;
-  height: 220px;
-  bottom: 15%;
-  right: -60px;
-  background: radial-gradient(circle, rgba(255, 107, 175, 0.12), transparent 70%);
-  animation: float-delayed 7s ease-in-out infinite;
-}
-
-.deco {
-  position: fixed;
   pointer-events: none;
-  z-index: -1;
-}
-
-.deco-circle-1 {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  top: 25%;
-  right: 3%;
-  background: radial-gradient(circle, rgba(255, 200, 87, 0.1), transparent 70%);
-  border: 2px solid rgba(255, 200, 87, 0.06);
-  animation: float-slow 10s ease-in-out infinite;
-}
-
-.deco-circle-2 {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  top: 55%;
-  left: 2%;
-  background: radial-gradient(circle, rgba(47, 181, 159, 0.1), transparent 70%);
-  border: 2px solid rgba(47, 181, 159, 0.06);
-  animation: float-delayed 9s ease-in-out infinite;
-}
-
-.deco-circle-3 {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  bottom: 8%;
-  right: 8%;
-  background: radial-gradient(circle, rgba(156, 110, 255, 0.08), transparent 70%);
-  border: 2px solid rgba(156, 110, 255, 0.05);
-  animation: float-slow 7s ease-in-out 1s infinite;
-}
-
-.deco-dots {
-  top: 35%;
-  left: 5%;
-  opacity: 0.7;
-  animation: float-slow 12s ease-in-out infinite;
-}
-
-.deco-ring {
-  bottom: 20%;
-  right: 4%;
-  opacity: 0.6;
-  animation: float-delayed 11s ease-in-out infinite;
-}
-
-.deco-star {
-  top: 18%;
-  left: 8%;
-  opacity: 0.7;
-  animation: wiggle 4s ease-in-out infinite, float-slow 8s ease-in-out infinite;
 }
 
 .site-header {
@@ -1130,9 +1052,7 @@ button {
 }
 
 @media (max-width: 720px) {
-  .deco,
-  .app-shell::before,
-  .app-shell::after {
+  .bg-shapes {
     display: none;
   }
 
