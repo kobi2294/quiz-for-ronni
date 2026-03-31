@@ -14,10 +14,20 @@ On task page, I should see a panel with list of questions. Each task is a list o
 
 My main navigation is by simply answering one question after another, but I should be able to click on any question number to jump to that question directly.
 
-Each question will have a text with an embedded palce holder for the child to write answer. There can be more then one placeholder, for example:
+Each question will have structured text parts with embedded placeholders for the child to write an answer. There can be more then one placeholder, for example:
 
 ```
-The prime numbers between 1 and 10 are: __, __, __, __.
+[
+  "The prime numbers between 1 and 10 are: ",
+  "__",
+  ", ",
+  "__",
+  ", ",
+  "__",
+  ", ",
+  "__",
+  "."
+]
 ```
 
 Next to each question there should be a button to submit the answer. Once I submit the answer, I should get immediate feedback on whether my answer is correct or not. If my answer is incorrect, I should be able to try again and I should see how many times I have tried. I get maximum of 3 attempts for each question, after which I can see the correct answer and move on to the next question.
@@ -29,7 +39,11 @@ I want to be able to define the quizes myself. All quizes should be stored in a 
   "title": "Quiz Title",
   "questions": [
     {
-      "text": "Question text with __ placeholders for answers.",
+      "text": [
+        "Question text before the answer: ",
+        "__",
+        " and after the answer."
+      ],
       "answers": ["correct answer 1", "correct answer 2", ...]
     },
     ...

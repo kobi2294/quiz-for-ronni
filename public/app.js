@@ -191,20 +191,22 @@
   }
 
   function renderQuestionText(question, progressQuestion, quizId, questionIndex) {
-    const parts = question.text.split("__");
-    let html = "";
+    const parts = getQuestionParts(question);
+    let placeholderIndex = 0;
 
-    for (let index = 0; index < parts.length; index += 1) {
-      html += formatMixedDirectionText(parts[index]);
-
-      if (index < parts.length - 1) {
-        const answerValue = progressQuestion.answers[index] || "";
+    const content = parts.map((part) => {
+      if (isPlaceholderPart(part)) {
+        const answerValue = progressQuestion.answers[placeholderIndex] || "";
+        const currentPlaceholderIndex = placeholderIndex;
+        placeholderIndex += 1;
         const disabled = progressQuestion.isCorrect || progressQuestion.isLocked ? "disabled" : "";
-        html += `<span class="answer-inline-wrapper"><input class="inline-answer" inputmode="numeric" autocomplete="off" data-quiz-id="${quizId}" data-question-index="${questionIndex}" data-answer-index="${index}" value="${escapeAttribute(answerValue)}" ${disabled} aria-label="תשובה ${index + 1}"></span>`;
+        return `<span class="answer-inline-wrapper"><input class="inline-answer" inputmode="numeric" autocomplete="off" data-quiz-id="${quizId}" data-question-index="${questionIndex}" data-answer-index="${currentPlaceholderIndex}" value="${escapeAttribute(answerValue)}" ${disabled} aria-label="תשובה ${currentPlaceholderIndex + 1}"></span>`;
       }
-    }
 
-    return html;
+      return renderQuestionSegment(part);
+    }).join("");
+
+    return `<span class="question-flow">${content}</span>`;
   }
 
   function escapeHtml(text) {
@@ -220,13 +222,56 @@
     return escapeHtml(text);
   }
 
-  function formatMixedDirectionText(text) {
-    const escaped = escapeHtml(text);
-    return escaped.replace(/([0-9.,()+\-/*=xX÷\s]+)/g, (match) => {
-      return /\d/.test(match)
-        ? `<span class="math-ltr" dir="ltr">${match}</span>`
-        : match;
-    });
+  function getQuestionParts(question) {
+    if (Array.isArray(question.text)) {
+      return [...question.text].reverse();
+    }
+
+    if (typeof question.text !== "string") {
+      return [];
+    }
+
+    const parts = [];
+    const chunks = question.text.split("__");
+
+    for (let index = 0; index < chunks.length; index += 1) {
+      if (chunks[index]) {
+        parts.push(chunks[index]);
+      }
+
+      if (index < chunks.length - 1) {
+        parts.push("__");
+      }
+    }
+
+    return parts;
+  }
+
+  function isPlaceholderPart(part) {
+    return part === "__";
+  }
+
+  function isMathSegment(part) {
+    return typeof part === "string" && /\d/.test(part) && !/[א-תA-Za-z]/.test(part);
+  }
+
+  function renderQuestionSegment(part) {
+    const classes = ["question-segment"];
+    if (isMathSegment(part)) {
+      classes.push("question-segment-math");
+    }
+
+    return `<span class="${classes.join(" ")}">${escapeHtml(part)}</span>`;
+  }
+
+  function renderQuestionPreview(question) {
+    return getQuestionParts(question).map((part) => {
+      if (isPlaceholderPart(part)) {
+        return '<span class="question-placeholder-preview">_____</span>';
+      }
+
+      return renderQuestionSegment(part);
+    }).join("");
   }
 
   function setRoute(route) {
@@ -681,12 +726,12 @@
         <div class="result-header">
           <div>
             <p class="eyebrow">שאלה ${index + 1}</p>
-            <h3 class="panel-title">${formatMixedDirectionText(question.text.replace(/__/g, "_____"))}</h3>
+            <h3 class="panel-title"><span class="question-flow">${renderQuestionPreview(question)}</span></h3>
           </div>
           <strong class="result-number">${statusText}</strong>
         </div>
         <p>ניסיונות: ${progressQuestion.attempts}</p>
-        <p>התשובה הנכונה: <span class="math-ltr" dir="ltr">${question.answers.join(" ,")}</span></p>
+        <p>התשובה הנכונה: <span class="answer-list">${question.answers.map(escapeHtml).join(" ,")}</span></p>
       </article>
     `;
   }

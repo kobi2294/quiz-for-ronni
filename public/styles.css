@@ -510,8 +510,26 @@ button {
   line-height: 1.8;
 }
 
-.math-ltr {
+.question-flow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3em;
+}
+
+.question-segment {
+  unicode-bidi: isolate;
+}
+
+.question-segment-math,
+.answer-list {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.question-placeholder-preview {
   display: inline-block;
+  min-width: 3ch;
   direction: ltr;
   unicode-bidi: isolate;
 }
