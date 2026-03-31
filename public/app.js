@@ -200,7 +200,8 @@
         const currentPlaceholderIndex = placeholderIndex;
         placeholderIndex += 1;
         const disabled = progressQuestion.isCorrect || progressQuestion.isLocked ? "disabled" : "";
-        return `<span class="answer-inline-wrapper"><input class="inline-answer" inputmode="numeric" autocomplete="off" data-quiz-id="${quizId}" data-question-index="${questionIndex}" data-answer-index="${currentPlaceholderIndex}" value="${escapeAttribute(answerValue)}" ${disabled} aria-label="תשובה ${currentPlaceholderIndex + 1}"></span>`;
+        const inputClass = progressQuestion.isCorrect ? "inline-answer inline-answer-correct" : progressQuestion.isLocked ? "inline-answer inline-answer-locked" : "inline-answer";
+        return `<span class="answer-inline-wrapper"><input class="${inputClass}" inputmode="numeric" autocomplete="off" data-quiz-id="${quizId}" data-question-index="${questionIndex}" data-answer-index="${currentPlaceholderIndex}" value="${escapeAttribute(answerValue)}" ${disabled} aria-label="תשובה ${currentPlaceholderIndex + 1}"></span>`;
       }
 
       return renderQuestionSegment(part);
@@ -349,12 +350,10 @@
       progressQuestion.feedback = progressQuestion.attempts === 1
         ? "מעולה. פתרת נכון כבר בניסיון הראשון."
         : "כל הכבוד. הצלחת לתקן ולפתור נכון.";
-      goToNextAvailableQuestion(quizId, questionIndex);
     } else if (progressQuestion.attempts >= 3) {
       progressQuestion.isLocked = true;
       progressQuestion.status = "locked";
       progressQuestion.feedback = "ניסית שלוש פעמים. עכשיו אפשר לראות את התשובה הנכונה ולהמשיך.";
-      goToNextAvailableQuestion(quizId, questionIndex);
     } else {
       progressQuestion.status = "wrong";
       progressQuestion.feedback = `עדיין לא. זה ניסיון מספר ${progressQuestion.attempts}. אפשר לנסות שוב.`;
@@ -429,63 +428,33 @@
     const activeTab = state.activeTab || "pending";
     const listItems = activeTab === "completed" ? stats.completed : stats.pending;
 
+    const inProgressHtml = stats.inProgress.length ? `
+      <section class="in-progress-banner">
+        ${stats.inProgress.map(({ quiz, progress }) => {
+          const completionRate = getQuestionCompletionRate(progress);
+          const currentNumber = progress.currentIndex + 1;
+          return `
+            <button type="button" class="resume-banner" data-action="start-quiz" data-quiz-id="${quiz.id}">
+              <div class="resume-banner-text">
+                <strong>${quiz.title}</strong>
+                <span>שאלה ${currentNumber} מתוך ${quiz.questions.length} · ${completionRate}% הושלם</span>
+              </div>
+              <span class="resume-banner-action">להמשך ◀</span>
+            </button>
+          `;
+        }).join("")}
+      </section>
+    ` : "";
+
     return `
       <section class="view active">
-        <div class="hero-grid">
-          <section class="hero-copy">
-            <p class="eyebrow">תרגול מקומי, פשוט וברור</p>
-            <h1 class="hero-title">בוחרים משימה, פותרים, ורואים את ההתקדמות מיד</h1>
-            <p class="hero-text">כל המשימות זמינות על המחשב הזה בלבד, בעברית מלאה ועם שמירה מקומית של כל ניסיון, ציון והתקדמות.</p>
-            <div class="hero-actions">
-              <button type="button" class="primary-button" data-action="start-first">התחילו במשימה הבאה</button>
-              <button type="button" class="secondary-button" data-action="open-progress">לצפייה בהתקדמות</button>
-            </div>
-            <div class="hero-badges">
-              <span class="hero-badge">${quizzes.length} משימות זמינות</span>
-              <span class="hero-badge">${stats.inProgress.length} משימות בתהליך</span>
-              <span class="hero-badge">${stats.average}% ממוצע הצלחה</span>
-            </div>
-          </section>
+        <div class="home-layout">
+          <main class="home-main">
+            ${inProgressHtml}
 
-          <aside class="hero-panel">
-            <div class="board-stack">
-              <div class="hero-board-primary">
-                <p class="eyebrow">תמונת מצב</p>
-                <h2 class="panel-title">מה קורה עכשיו</h2>
-                <p class="panel-copy">משימות שלא הושלמו מוצגות מייד, ומשימות שהושלמו נשמרות עם תוצאות ומשוב.</p>
-                <div class="board-progress"><span style="width:${quizzes.length ? Math.round((stats.completed.length / quizzes.length) * 100) : 0}%;"></span></div>
-              </div>
-              <div class="hero-board-secondary">
-                <strong>אפשר להפסיק ולחזור</strong>
-                <p class="meta-copy">אם התחלת משימה ולא סיימת, היא תופיע באזור "משימות שהתחלתי" ותוכלי להמשיך מאותה נקודה.</p>
-              </div>
-            </div>
-          </aside>
-        </div>
-
-        <div class="home-grid">
-          <section class="panel">
-            <p class="eyebrow">הסטטיסטיקה שלי</p>
-            <h2 class="section-title">סיכום אישי</h2>
-            <div class="stats-grid">
-              <article class="stats-card">
-                <span class="stat-label">משימות שסיימתי</span>
-                <strong>${stats.completed.length}</strong>
-              </article>
-              <article class="stats-card">
-                <span class="stat-label">משימות שנשארו</span>
-                <strong>${stats.pending.length}</strong>
-              </article>
-              <article class="stats-card">
-                <span class="stat-label">ממוצע במשימות שסיימתי</span>
-                <strong>${stats.average}%</strong>
-              </article>
-            </div>
-
-            <div class="top-row" style="margin-top:20px; justify-content:space-between; align-items:center;">
-              <h3 class="panel-title">רשימת משימות</h3>
+            <div class="top-row" style="justify-content:space-between; align-items:center;">
               <div class="tabs-row">
-                <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">משימות שעוד לא עשיתי</button>
+                <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">משימות שלא עשיתי</button>
                 <button type="button" class="tab-button ${activeTab === "completed" ? "active" : ""}" data-tab="completed">משימות שעשיתי</button>
               </div>
             </div>
@@ -493,15 +462,22 @@
             <div class="tasks-grid">
               ${listItems.length ? listItems.map(({ quiz, progress }) => renderTaskCard(quiz, progress, activeTab)).join("") : `<div class="empty-state">אין כרגע משימות ברשימה הזאת.</div>`}
             </div>
-          </section>
+          </main>
 
-          <section class="panel">
-            <p class="eyebrow">משימות שהתחלתי</p>
-            <h2 class="section-title">אפשר להמשיך בדיוק מהמקום שעצרת</h2>
-            <div class="results-list">
-              ${stats.inProgress.length ? stats.inProgress.map(({ quiz, progress }) => renderResumeCard(quiz, progress)).join("") : `<div class="empty-state">עדיין לא התחלת משימה שנשארה פתוחה.</div>`}
+          <aside class="home-sidebar">
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-value">${stats.completed.length}</span>
+              <span class="sidebar-stat-label">משימות שסיימתי</span>
             </div>
-          </section>
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-value">${quizzes.length}</span>
+              <span class="sidebar-stat-label">סה״כ משימות</span>
+            </div>
+            <div class="sidebar-stat">
+              <span class="sidebar-stat-value">${stats.average}%</span>
+              <span class="sidebar-stat-label">ממוצע הצלחה</span>
+            </div>
+          </aside>
         </div>
       </section>
     `;
@@ -595,10 +571,8 @@
             <div class="question-body">
               <p class="question-text">${renderQuestionText(question, progressQuestion, quizId, questionIndex)}</p>
               <div class="question-actions">
-                <button type="button" class="primary-button" data-action="submit-question" data-quiz-id="${quizId}" data-question-index="${questionIndex}">בדיקת תשובה</button>
+                <button type="button" class="primary-button" data-action="submit-question" data-quiz-id="${quizId}" data-question-index="${questionIndex}" ${progressQuestion.isCorrect || progressQuestion.isLocked ? "disabled" : ""}>בדיקה</button>
                 <button type="button" class="secondary-button" data-action="next-question" data-quiz-id="${quizId}">לשאלה הבאה</button>
-                <button type="button" class="ghost-button" data-action="restart-quiz" data-quiz-id="${quizId}">התחלה מחדש</button>
-                <button type="button" class="ghost-button" data-action="go-home">חזרה לדף הבית</button>
               </div>
 
               <div class="feedback-box ${getFeedbackClass(progressQuestion)}">
@@ -694,7 +668,6 @@
               <span class="summary-pill">נשמר בתאריך ${formatDate(summary.completedAt)}</span>
             </div>
             <div class="result-actions" style="margin-top:20px;">
-              <button type="button" class="primary-button" data-action="restart-quiz" data-quiz-id="${quiz.id}">לנסות שוב</button>
               <button type="button" class="secondary-button" data-action="start-next-from-results">למשימה הבאה</button>
               <button type="button" class="ghost-button" data-action="go-home">חזרה לדף הבית</button>
             </div>

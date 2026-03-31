@@ -192,6 +192,84 @@ button {
   margin-top: 18px;
 }
 
+.home-layout {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 32px;
+  align-items: start;
+}
+
+.home-main {
+  min-width: 0;
+}
+
+.home-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+.sidebar-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sidebar-stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.sidebar-stat-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.resume-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  border: 2px solid rgba(95, 140, 255, 0.24);
+  background: rgba(95, 140, 255, 0.06);
+  cursor: pointer;
+  font: inherit;
+  text-align: start;
+}
+
+.resume-banner:hover {
+  border-color: var(--sky);
+  background: rgba(95, 140, 255, 0.1);
+}
+
+.resume-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resume-banner-text strong {
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.resume-banner-text span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.resume-banner-action {
+  font-weight: 700;
+  color: var(--sky);
+  white-space: nowrap;
+}
+
 .panel,
 .hero-panel,
 .task-card,
@@ -270,6 +348,10 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.question-actions {
+  margin-top: 24px;
 }
 
 .hero-badges,
@@ -505,7 +587,7 @@ button {
 }
 
 .question-text {
-  margin: 0 0 18px;
+  margin: 0 0 32px;
   font-size: clamp(1.4rem, 3vw, 2rem);
   line-height: 1.8;
 }
@@ -554,6 +636,18 @@ button {
   outline: none;
   border-color: var(--sky);
   box-shadow: 0 0 0 4px rgba(95, 140, 255, 0.14);
+}
+
+.inline-answer-correct {
+  border-color: #32b56a;
+  background: rgba(50, 181, 106, 0.1);
+  color: #155a34;
+}
+
+.inline-answer-locked {
+  border-color: #e74c3c;
+  background: rgba(231, 76, 60, 0.08);
+  color: #8b1a1a;
 }
 
 .answer-inline-wrapper {
@@ -636,6 +730,7 @@ button {
 @media (max-width: 1020px) {
   .hero-grid,
   .home-grid,
+  .home-layout,
   .summary-layout,
   .settings-layout,
   .tasks-grid,
@@ -644,6 +739,12 @@ button {
   .results-grid,
   .settings-grid {
     grid-template-columns: 1fr;
+  }
+
+  .home-sidebar {
+    flex-direction: row;
+    justify-content: center;
+    gap: 32px;
   }
 
   .task-layout {
