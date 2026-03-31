@@ -1,0 +1,18 @@
+[
+  {
+    "id": "addition-subtraction-100",
+    "file": "חיבור וחיסור עד 100.json"
+  },
+  {
+    "id": "division-with-remainder",
+    "file": "חילוק עם שארית.json"
+  },
+  {
+    "id": "basic-multiplication-division",
+    "file": "כפל וחילוק בסיסי.json"
+  },
+  {
+    "id": "advanced-multiplication-100",
+    "file": "כפל מתקדם עד 100.json"
+  }
+]

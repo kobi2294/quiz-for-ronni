@@ -1,5 +1,9 @@
 {
+  "id": "addition-subtraction-100",
   "title": "חיבור וחיסור עד 100",
+  "topic": "חיבור וחיסור",
+  "difficulty": "כיתה ג׳",
+  "teacherName": "המורה יעל",
   "questions": [
     {
       "text": [

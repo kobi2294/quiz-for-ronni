@@ -1,8 +1,22 @@
-(function () {
+(async function () {
   const STORAGE_KEY = "math-practice-local-state-v1";
-  const quizzes = Array.isArray(window.QUIZ_DATA) ? window.QUIZ_DATA : [];
-  const quizMap = new Map(quizzes.map((quiz) => [quiz.id, quiz]));
   const app = document.getElementById("app");
+
+  let quizzes = [];
+  let quizMap = new Map();
+
+  try {
+    const registry = await fetch("quizes/index.json").then(r => r.json());
+    const loaded = await Promise.all(
+      registry.map(entry =>
+        fetch("quizes/" + encodeURIComponent(entry.file)).then(r => r.json())
+      )
+    );
+    quizzes = loaded;
+    quizMap = new Map(quizzes.map(q => [q.id, q]));
+  } catch (err) {
+    console.error("Failed to load quizzes:", err);
+  }
 
   let state = loadState();
 
@@ -191,23 +205,27 @@
   }
 
   function renderQuestionText(question, progressQuestion, quizId, questionIndex) {
-    const parts = getQuestionParts(question);
+    const lines = getQuestionLines(question);
     let placeholderIndex = 0;
 
-    const content = parts.map((part) => {
-      if (isPlaceholderPart(part)) {
-        const answerValue = progressQuestion.answers[placeholderIndex] || "";
-        const currentPlaceholderIndex = placeholderIndex;
-        placeholderIndex += 1;
-        const disabled = progressQuestion.isCorrect || progressQuestion.isLocked ? "disabled" : "";
-        const inputClass = progressQuestion.isCorrect ? "inline-answer inline-answer-correct" : progressQuestion.isLocked ? "inline-answer inline-answer-locked" : "inline-answer";
-        return `<span class="answer-inline-wrapper"><input class="${inputClass}" inputmode="numeric" autocomplete="off" data-quiz-id="${quizId}" data-question-index="${questionIndex}" data-answer-index="${currentPlaceholderIndex}" value="${escapeAttribute(answerValue)}" ${disabled} aria-label="תשובה ${currentPlaceholderIndex + 1}"></span>`;
-      }
+    const linesHtml = lines.map((parts) => {
+      const content = parts.map((part) => {
+        if (isPlaceholderPart(part)) {
+          const answerValue = progressQuestion.answers[placeholderIndex] || "";
+          const currentPlaceholderIndex = placeholderIndex;
+          placeholderIndex += 1;
+          const disabled = progressQuestion.isCorrect || progressQuestion.isLocked ? "disabled" : "";
+          const inputClass = progressQuestion.isCorrect ? "inline-answer inline-answer-correct" : progressQuestion.isLocked ? "inline-answer inline-answer-locked" : "inline-answer";
+          return `<span class="answer-inline-wrapper"><input class="${inputClass}" inputmode="numeric" autocomplete="off" data-quiz-id="${quizId}" data-question-index="${questionIndex}" data-answer-index="${currentPlaceholderIndex}" value="${escapeAttribute(answerValue)}" ${disabled} aria-label="תשובה ${currentPlaceholderIndex + 1}"></span>`;
+        }
 
-      return renderQuestionSegment(part);
-    }).join("");
+        return renderQuestionSegment(part);
+      }).join("");
 
-    return `<span class="question-flow">${content}</span>`;
+      return `<span class="question-flow">${content}</span>`;
+    });
+
+    return linesHtml.join("<br>");
   }
 
   function escapeHtml(text) {
@@ -223,13 +241,17 @@
     return escapeHtml(text);
   }
 
-  function getQuestionParts(question) {
+  function getQuestionLines(question) {
+    if (Array.isArray(question.text) && question.text.length > 0 && Array.isArray(question.text[0])) {
+      return question.text.map(line => [...line].reverse());
+    }
+
     if (Array.isArray(question.text)) {
-      return [...question.text].reverse();
+      return [[...question.text].reverse()];
     }
 
     if (typeof question.text !== "string") {
-      return [];
+      return [[]];
     }
 
     const parts = [];
@@ -245,7 +267,7 @@
       }
     }
 
-    return parts;
+    return [parts];
   }
 
   function isPlaceholderPart(part) {
@@ -266,13 +288,17 @@
   }
 
   function renderQuestionPreview(question) {
-    return getQuestionParts(question).map((part) => {
-      if (isPlaceholderPart(part)) {
-        return '<span class="question-placeholder-preview">_____</span>';
-      }
+    const lines = getQuestionLines(question);
+    return lines.map((parts) => {
+      const content = parts.map((part) => {
+        if (isPlaceholderPart(part)) {
+          return '<span class="question-placeholder-preview">_____</span>';
+        }
 
-      return renderQuestionSegment(part);
-    }).join("");
+        return renderQuestionSegment(part);
+      }).join("");
+      return `<span class="question-flow">${content}</span>`;
+    }).join("<br>");
   }
 
   function setRoute(route) {
