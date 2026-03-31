@@ -94,11 +94,14 @@ body {
   font-family: "Assistant", "Segoe UI", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(ellipse at top right, rgba(108, 141, 255, 0.18), transparent 50%),
-    radial-gradient(ellipse at bottom left, rgba(255, 107, 175, 0.12), transparent 50%),
-    radial-gradient(ellipse at center, rgba(156, 110, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse at top right, rgba(108, 141, 255, 0.22), transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(255, 107, 175, 0.16), transparent 50%),
+    radial-gradient(ellipse at center, rgba(156, 110, 255, 0.10), transparent 60%),
+    radial-gradient(circle at 15% 80%, rgba(255, 200, 87, 0.14), transparent 30%),
+    radial-gradient(circle at 85% 30%, rgba(47, 181, 159, 0.12), transparent 25%),
     linear-gradient(170deg, #e8f0ff 0%, var(--bg) 40%, #f0e6ff 100%);
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 button,
@@ -111,9 +114,97 @@ button {
 }
 
 .app-shell {
+  position: relative;
   width: min(1220px, calc(100% - 28px));
   margin-inline: auto;
   padding: 22px 0 38px;
+}
+
+.app-shell::before,
+.app-shell::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.app-shell::before {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: -80px;
+  background: radial-gradient(circle, rgba(156, 110, 255, 0.12), transparent 70%);
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.app-shell::after {
+  width: 220px;
+  height: 220px;
+  bottom: 15%;
+  right: -60px;
+  background: radial-gradient(circle, rgba(255, 107, 175, 0.12), transparent 70%);
+  animation: float-delayed 7s ease-in-out infinite;
+}
+
+.deco {
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.deco-circle-1 {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  top: 25%;
+  right: 3%;
+  background: radial-gradient(circle, rgba(255, 200, 87, 0.1), transparent 70%);
+  border: 2px solid rgba(255, 200, 87, 0.06);
+  animation: float-slow 10s ease-in-out infinite;
+}
+
+.deco-circle-2 {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  top: 55%;
+  left: 2%;
+  background: radial-gradient(circle, rgba(47, 181, 159, 0.1), transparent 70%);
+  border: 2px solid rgba(47, 181, 159, 0.06);
+  animation: float-delayed 9s ease-in-out infinite;
+}
+
+.deco-circle-3 {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  bottom: 8%;
+  right: 8%;
+  background: radial-gradient(circle, rgba(156, 110, 255, 0.08), transparent 70%);
+  border: 2px solid rgba(156, 110, 255, 0.05);
+  animation: float-slow 7s ease-in-out 1s infinite;
+}
+
+.deco-dots {
+  top: 35%;
+  left: 5%;
+  opacity: 0.7;
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+.deco-ring {
+  bottom: 20%;
+  right: 4%;
+  opacity: 0.6;
+  animation: float-delayed 11s ease-in-out infinite;
+}
+
+.deco-star {
+  top: 18%;
+  left: 8%;
+  opacity: 0.7;
+  animation: wiggle 4s ease-in-out infinite, float-slow 8s ease-in-out infinite;
 }
 
 .site-header {
@@ -254,7 +345,8 @@ button {
 }
 
 .primary-button {
-  background: linear-gradient(135deg, #6c8dff, var(--purple));
+  background: linear-gradient(135deg, #6c8dff, var(--purple), var(--pink));
+  background-size: 200% auto;
   box-shadow: 0 8px 24px rgba(108, 141, 255, 0.35);
 }
 
@@ -343,18 +435,38 @@ button {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 16px 12px;
+  padding: 18px 14px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.85);
   border: 2px solid rgba(108, 141, 255, 0.12);
   box-shadow: 0 4px 14px rgba(45, 49, 96, 0.06);
   animation: slide-up 0.4s ease both;
   transition: transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-stat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 20px 20px 0 0;
 }
 
 .sidebar-stat:nth-child(1) { animation-delay: 0.15s; }
 .sidebar-stat:nth-child(2) { animation-delay: 0.25s; }
 .sidebar-stat:nth-child(3) { animation-delay: 0.35s; }
+
+.sidebar-stat:nth-child(1)::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+.sidebar-stat:nth-child(2)::before { background: linear-gradient(90deg, var(--sky), var(--teal)); }
+.sidebar-stat:nth-child(3)::before { background: linear-gradient(90deg, var(--gold), var(--orange)); }
+
+.sidebar-stat:nth-child(1) { border-color: rgba(156, 110, 255, 0.18); }
+.sidebar-stat:nth-child(2) { border-color: rgba(108, 141, 255, 0.18); }
+.sidebar-stat:nth-child(3) { border-color: rgba(255, 200, 87, 0.25); }
 
 .sidebar-stat:hover {
   transform: scale(1.05);
@@ -385,12 +497,26 @@ button {
   padding: 16px 22px;
   margin-bottom: 18px;
   border-radius: 18px;
-  border: 2px dashed rgba(108, 141, 255, 0.35);
-  background: linear-gradient(135deg, rgba(108, 141, 255, 0.08), rgba(156, 110, 255, 0.06));
+  border: 2px solid rgba(156, 110, 255, 0.2);
+  background: linear-gradient(135deg, rgba(156, 110, 255, 0.1), rgba(108, 141, 255, 0.08), rgba(255, 107, 175, 0.06));
   cursor: pointer;
   font: inherit;
   text-align: start;
-  animation: pop-in 0.4s ease;
+  animation: slide-up 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.resume-banner::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(156, 110, 255, 0.1), transparent 70%);
+  pointer-events: none;
 }
 
 .resume-banner:hover {
@@ -463,10 +589,13 @@ button {
 
 .eyebrow {
   margin: 0 0 10px;
-  color: var(--orange-deep);
   font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: 0.03em;
+  background: linear-gradient(135deg, var(--orange-deep), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-title {
@@ -522,10 +651,16 @@ button {
   min-height: 38px;
   padding: 8px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 2px solid rgba(108, 141, 255, 0.1);
+  background: linear-gradient(135deg, rgba(108, 141, 255, 0.1), rgba(156, 110, 255, 0.08));
+  border: 2px solid rgba(108, 141, 255, 0.14);
   font-weight: 700;
   font-size: 0.9rem;
+  color: var(--text);
+}
+
+.summary-pill {
+  background: linear-gradient(135deg, rgba(156, 110, 255, 0.12), rgba(255, 107, 175, 0.08));
+  border-color: rgba(156, 110, 255, 0.18);
 }
 
 .board-stack {
@@ -620,13 +755,39 @@ button {
 .task-card:nth-child(6) { animation-delay: 0.3s; }
 
 .task-card.pending {
-  background: linear-gradient(135deg, rgba(255, 200, 87, 0.22), rgba(255, 255, 255, 0.96));
+  background: linear-gradient(145deg, rgba(255, 200, 87, 0.18), rgba(255, 141, 77, 0.08), rgba(255, 255, 255, 0.96));
   border: 2px solid rgba(255, 200, 87, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-card.pending::before {
+  content: "📝";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  font-size: 3.5rem;
+  opacity: 0.08;
+  transform: rotate(-15deg);
+  pointer-events: none;
 }
 
 .task-card.done {
-  background: linear-gradient(135deg, rgba(50, 181, 106, 0.15), rgba(255, 255, 255, 0.96));
+  background: linear-gradient(145deg, rgba(50, 181, 106, 0.12), rgba(47, 181, 159, 0.08), rgba(255, 255, 255, 0.96));
   border: 2px solid rgba(50, 181, 106, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-card.done::before {
+  content: "🏆";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  font-size: 3.5rem;
+  opacity: 0.08;
+  transform: rotate(10deg);
+  pointer-events: none;
 }
 
 .resume-card {
@@ -745,9 +906,10 @@ button {
   min-height: 40px;
   padding: 8px 14px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(255, 200, 87, 0.3), rgba(255, 107, 175, 0.15));
+  background: linear-gradient(135deg, rgba(255, 200, 87, 0.35), rgba(255, 107, 175, 0.18));
   font-weight: 800;
-  border: 2px solid rgba(255, 200, 87, 0.3);
+  border: 2px solid rgba(255, 200, 87, 0.35);
+  animation: pop-in 0.3s ease;
 }
 
 .question-body {
@@ -805,7 +967,7 @@ button {
 .inline-answer:focus {
   outline: none;
   border-color: var(--purple);
-  box-shadow: 0 0 0 5px rgba(156, 110, 255, 0.15);
+  box-shadow: 0 0 0 5px rgba(156, 110, 255, 0.15), 0 4px 12px rgba(156, 110, 255, 0.1);
   animation: pop-in 0.2s ease;
 }
 
@@ -830,14 +992,14 @@ button {
   margin-top: 18px;
   padding: 18px;
   border-radius: 20px;
-  border: 2px solid rgba(108, 141, 255, 0.12);
-  background: rgba(255, 255, 255, 0.88);
-  animation: pop-in 0.3s ease;
+  border: 2px solid rgba(108, 141, 255, 0.15);
+  background: linear-gradient(135deg, rgba(108, 141, 255, 0.06), rgba(156, 110, 255, 0.04), rgba(255, 255, 255, 0.9));
+  animation: slide-up 0.3s ease;
 }
 
 .feedback-box.correct {
   color: #155a34;
-  background: linear-gradient(135deg, rgba(50, 181, 106, 0.14), rgba(50, 181, 106, 0.06));
+  background: linear-gradient(135deg, rgba(50, 181, 106, 0.16), rgba(47, 181, 159, 0.08), rgba(255, 255, 255, 0.9));
   border-color: rgba(50, 181, 106, 0.3);
 }
 
@@ -855,10 +1017,24 @@ button {
 .summary-card {
   padding: 24px;
   border-radius: 26px;
-  background: linear-gradient(135deg, rgba(156, 110, 255, 0.12), rgba(108, 141, 255, 0.08), rgba(255, 200, 87, 0.1));
-  border: 2px solid rgba(156, 110, 255, 0.15);
+  background: linear-gradient(145deg, rgba(156, 110, 255, 0.14), rgba(108, 141, 255, 0.1), rgba(255, 200, 87, 0.1), rgba(255, 255, 255, 0.9));
+  border: 2px solid rgba(156, 110, 255, 0.18);
   box-shadow: var(--shadow-lg);
-  animation: pop-in 0.4s ease;
+  animation: slide-up 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 200, 87, 0.15), transparent 70%);
+  pointer-events: none;
 }
 
 .summary-score {
@@ -884,8 +1060,21 @@ button {
 .teacher-note {
   padding: 18px;
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(47, 181, 159, 0.16), rgba(255, 255, 255, 0.94));
-  border: 1px solid rgba(47, 181, 159, 0.18);
+  background: linear-gradient(180deg, rgba(47, 181, 159, 0.18), rgba(50, 181, 106, 0.08), rgba(255, 255, 255, 0.94));
+  border: 2px solid rgba(47, 181, 159, 0.2);
+  animation: slide-up 0.5s ease 0.15s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.teacher-note::after {
+  content: "💬";
+  position: absolute;
+  bottom: -5px;
+  left: -5px;
+  font-size: 3rem;
+  opacity: 0.07;
+  pointer-events: none;
 }
 
 .settings-note {
@@ -899,8 +1088,8 @@ button {
   padding: 24px;
   border-radius: 22px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px dashed rgba(29, 36, 64, 0.12);
+  background: linear-gradient(135deg, rgba(108, 141, 255, 0.06), rgba(156, 110, 255, 0.04), rgba(255, 255, 255, 0.7));
+  border: 2px dashed rgba(156, 110, 255, 0.15);
 }
 
 .hidden {
@@ -941,6 +1130,12 @@ button {
 }
 
 @media (max-width: 720px) {
+  .deco,
+  .app-shell::before,
+  .app-shell::after {
+    display: none;
+  }
+
   .app-shell {
     width: min(100% - 18px, 1220px);
     padding-top: 16px;
