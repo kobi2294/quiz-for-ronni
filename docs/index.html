@@ -13,13 +13,45 @@
 <body>
   <div class="app-shell">
     <header class="site-header">
-      <button class="brand-button" id="homeShortcut" type="button">
-        <span class="brand-mark">🧮</span>
-        <span>
-          <strong>מתרגלים חשבון</strong>
-          <small>בואו נשחק עם מספרים! 🎯</small>
-        </span>
-      </button>
+      <div class="header-banner" id="homeShortcut" role="button" tabindex="0">
+        <svg class="header-rainbow" viewBox="0 0 800 200" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="rainbow1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff6baf"/>
+              <stop offset="25%" stop-color="#9c6eff"/>
+              <stop offset="50%" stop-color="#6c8dff"/>
+              <stop offset="75%" stop-color="#2fb59f"/>
+              <stop offset="100%" stop-color="#ffc857"/>
+            </linearGradient>
+            <linearGradient id="rainbow2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ffc857"/>
+              <stop offset="25%" stop-color="#ff8d4d"/>
+              <stop offset="50%" stop-color="#ff6baf"/>
+              <stop offset="75%" stop-color="#9c6eff"/>
+              <stop offset="100%" stop-color="#6c8dff"/>
+            </linearGradient>
+            <linearGradient id="rainbow3" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#6c8dff"/>
+              <stop offset="30%" stop-color="#2fb59f"/>
+              <stop offset="60%" stop-color="#ffc857"/>
+              <stop offset="100%" stop-color="#ff6baf"/>
+            </linearGradient>
+          </defs>
+          <path d="M -20 200 Q 400 -60 820 200" fill="none" stroke="url(#rainbow1)" stroke-width="6" opacity="0.5" class="rainbow-arc rainbow-arc-1"/>
+          <path d="M -20 200 Q 400 -30 820 200" fill="none" stroke="url(#rainbow2)" stroke-width="5" opacity="0.4" class="rainbow-arc rainbow-arc-2"/>
+          <path d="M -20 200 Q 400 0 820 200" fill="none" stroke="url(#rainbow3)" stroke-width="4" opacity="0.3" class="rainbow-arc rainbow-arc-3"/>
+        </svg>
+        <div class="header-content">
+          <div class="header-icons">
+            <span class="header-icon header-icon-1">🧮</span>
+            <span class="header-icon header-icon-2">✏️</span>
+            <span class="header-icon header-icon-3">⭐</span>
+            <span class="header-icon header-icon-4">🎯</span>
+          </div>
+          <h1 class="header-title">מתרגלים חשבון</h1>
+          <p class="header-subtitle">!בואו נשחק עם מספרים</p>
+        </div>
+      </div>
 
       <nav class="header-actions" aria-label="ניווט ראשי">
         <button type="button" class="ghost-button" id="progressShortcut">ההתקדמות שלי</button>

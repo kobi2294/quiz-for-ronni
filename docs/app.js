@@ -938,7 +938,9 @@
     setActiveTab(tabTarget.dataset.tab);
   });
 
-  document.getElementById("homeShortcut").addEventListener("click", () => setRoute("home"));
+  const homeEl = document.getElementById("homeShortcut");
+  homeEl.addEventListener("click", () => setRoute("home"));
+  homeEl.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setRoute("home"); } });
   document.getElementById("progressShortcut").addEventListener("click", () => setRoute("progress"));
   window.addEventListener("hashchange", render);
 
