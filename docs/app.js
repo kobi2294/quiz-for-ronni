@@ -36,7 +36,7 @@
 
   function createEmptyState() {
     return {
-      activeTab: "pending",
+      activeTab: "allocated",
       activeQuizId: null,
       progress: {}
     };
@@ -491,7 +491,7 @@
 
   function renderHomeView() {
     const stats = getDerivedStats();
-    const activeTab = state.activeTab || "pending";
+    const activeTab = state.activeTab || "allocated";
     const listItems = getActiveHomeList(stats, activeTab);
 
     const inProgressHtml = stats.inProgress.length ? `
@@ -520,8 +520,8 @@
 
             <div class="top-row" style="justify-content:space-between; align-items:center;">
               <div class="tabs-row">
-                <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">📋 משימות שלא עשיתי</button>
                 <button type="button" class="tab-button has-badge ${activeTab === "allocated" ? "active" : ""}" data-tab="allocated"><span class="tab-button-label">הרשימה שלי</span><span class="tab-badge">${stats.allocated.length}</span></button>
+                <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">📋 משימות שלא עשיתי</button>
                 <button type="button" class="tab-button ${activeTab === "completed" ? "active" : ""}" data-tab="completed">✅ משימות שעשיתי</button>
               </div>
             </div>
@@ -979,7 +979,7 @@
   }
 
   function setActiveTab(tabName) {
-    state.activeTab = ["pending", "allocated", "completed"].includes(tabName) ? tabName : "pending";
+    state.activeTab = ["pending", "allocated", "completed"].includes(tabName) ? tabName : "allocated";
     saveState();
     render();
   }
