@@ -69,6 +69,7 @@
 
     const base = {
       started: false,
+      allocated: false,
       completed: false,
       currentIndex: 0,
       completedAt: null,
@@ -109,6 +110,7 @@
       ...base,
       ...rawProgress,
       started: Boolean(rawProgress.started),
+      allocated: Boolean(rawProgress.allocated),
       completed: Boolean(rawProgress.completed),
       currentIndex: Number.isFinite(rawProgress.currentIndex) ? rawProgress.currentIndex : 0,
       history: Array.isArray(rawProgress.history) ? rawProgress.history : [],
@@ -148,6 +150,7 @@
     const allProgress = quizzes.map((quiz) => ({ quiz, progress: getQuizProgress(quiz.id) }));
     const completed = allProgress.filter(({ progress }) => progress.completed);
     const pending = allProgress.filter(({ progress }) => !progress.completed);
+    const allocated = allProgress.filter(({ progress }) => progress.allocated && !progress.completed);
     const inProgress = allProgress.filter(({ progress }) => progress.started && !progress.completed);
     const totalScore = completed.reduce((sum, item) => sum + (item.progress.latestAccuracy || 0), 0);
     const average = completed.length ? Math.round(totalScore / completed.length) : 0;
@@ -155,9 +158,42 @@
     return {
       completed,
       pending,
+      allocated,
       inProgress,
       average
     };
+  }
+
+  function getActiveHomeList(stats, activeTab) {
+    if (activeTab === "completed") {
+      return stats.completed;
+    }
+
+    if (activeTab === "allocated") {
+      return stats.allocated;
+    }
+
+    return stats.pending;
+  }
+
+  function getAllocationButtonLabel(progress) {
+    return progress.allocated ? "הסר מהרשימה שלי" : "הוסף לרשימה שלי";
+  }
+
+  function renderAllocationButton(quizId, progress, className = "") {
+    if (progress.completed) {
+      return "";
+    }
+
+    const classes = ["ghost-button", "allocation-button"];
+    if (className) {
+      classes.push(className);
+    }
+    if (progress.allocated) {
+      classes.push("allocated");
+    }
+
+    return `<button type="button" class="${classes.join(" ")}" data-action="toggle-allocation" data-quiz-id="${quizId}">${getAllocationButtonLabel(progress)}</button>`;
   }
 
   function getQuestionCompletionRate(progress) {
@@ -456,7 +492,7 @@
   function renderHomeView() {
     const stats = getDerivedStats();
     const activeTab = state.activeTab || "pending";
-    const listItems = activeTab === "completed" ? stats.completed : stats.pending;
+    const listItems = getActiveHomeList(stats, activeTab);
 
     const inProgressHtml = stats.inProgress.length ? `
       <section class="in-progress-banner">
@@ -485,6 +521,7 @@
             <div class="top-row" style="justify-content:space-between; align-items:center;">
               <div class="tabs-row">
                 <button type="button" class="tab-button ${activeTab === "pending" ? "active" : ""}" data-tab="pending">📋 משימות שלא עשיתי</button>
+                <button type="button" class="tab-button has-badge ${activeTab === "allocated" ? "active" : ""}" data-tab="allocated"><span class="tab-button-label">הרשימה שלי</span><span class="tab-badge">${stats.allocated.length}</span></button>
                 <button type="button" class="tab-button ${activeTab === "completed" ? "active" : ""}" data-tab="completed">✅ משימות שעשיתי</button>
               </div>
             </div>
@@ -518,9 +555,10 @@
     const actionText = isCompleted ? "לצפייה בתוצאות" : progress.started ? "להמשך המשימה" : "להתחלת המשימה";
     const actionType = isCompleted ? "open-results" : "start-quiz";
     const completionRate = getQuestionCompletionRate(progress);
+    const allocationButton = renderAllocationButton(quiz.id, progress, "task-allocation-button");
 
     return `
-      <button type="button" class="task-card ${isCompleted ? "done" : "pending"}" data-action="${actionType}" data-quiz-id="${quiz.id}">
+      <article class="task-card ${isCompleted ? "done" : "pending"}">
         <p class="eyebrow">${quiz.topic}</p>
         <h3>${quiz.title}</h3>
         <p>${quiz.questions.length} שאלות, רמת ${quiz.difficulty}</p>
@@ -529,10 +567,12 @@
           <span class="meta-pill">${progress.history.length} ניסיונות שמורים</span>
         </div>
         <footer>
-          <span>${actionText}</span>
-          <span>◀</span>
+          <div class="task-card-actions">
+            <button type="button" class="primary-button task-open-button" data-action="${actionType}" data-quiz-id="${quiz.id}">${actionText}</button>
+            ${allocationButton}
+          </div>
         </footer>
-      </button>
+      </article>
     `;
   }
 
@@ -586,7 +626,7 @@
 
           <section class="question-panel">
             <div class="question-topline">
-              <div>
+              <div class="question-topline-main">
                 <p class="eyebrow">${quiz.title}</p>
                 <h1 class="question-title">${quiz.topic}</h1>
                 <div class="task-meta">
@@ -595,7 +635,10 @@
                   <span class="meta-pill">ניסיונות שנותרו: ${attemptsLeft}</span>
                 </div>
               </div>
-              <div class="question-counter">שאלה ${questionIndex + 1} מתוך ${quiz.questions.length}</div>
+              <div class="question-topline-side">
+                ${renderAllocationButton(quizId, progress, "question-allocation-button")}
+                <div class="question-counter">שאלה ${questionIndex + 1} מתוך ${quiz.questions.length}</div>
+              </div>
             </div>
 
             <div class="question-body">
@@ -881,6 +924,18 @@
       return;
     }
 
+    if (action === "toggle-allocation") {
+      const progress = getQuizProgress(quizId);
+      if (!progress || progress.completed) {
+        return;
+      }
+
+      progress.allocated = !progress.allocated;
+      saveState();
+      render();
+      return;
+    }
+
     if (action === "submit-question") {
       submitQuestion(quizId, questionIndex);
       return;
@@ -924,7 +979,7 @@
   }
 
   function setActiveTab(tabName) {
-    state.activeTab = tabName;
+    state.activeTab = ["pending", "allocated", "completed"].includes(tabName) ? tabName : "pending";
     saveState();
     render();
   }

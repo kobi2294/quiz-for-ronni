@@ -325,7 +325,6 @@ button {
 .danger-button:hover,
 .tab-button:hover,
 .question-jump:hover,
-.task-card:hover,
 .resume-card:hover {
   transform: translateY(-3px) scale(1.02);
 }
@@ -687,12 +686,60 @@ button {
   margin-bottom: 14px;
 }
 
+.tabs-row .tab-button {
+  flex: 0 1 auto;
+}
+
+.tab-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+
+.tab-button.has-badge {
+  display: grid;
+  place-items: center;
+}
+
+.tab-button-label {
+  display: block;
+  text-align: center;
+}
+
+.tab-badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--purple);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 6px 14px rgba(45, 49, 96, 0.16), inset 0 0 0 1px rgba(108, 141, 255, 0.12);
+  z-index: 1;
+}
+
 .tab-button.active {
   color: #fff;
   border-color: transparent;
   background: linear-gradient(135deg, var(--purple), var(--sky));
   box-shadow: 0 8px 22px rgba(156, 110, 255, 0.25);
   animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.tab-button.active .tab-badge {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--purple);
+  box-shadow: 0 4px 12px rgba(45, 49, 96, 0.16), inset 0 0 0 1px rgba(156, 110, 255, 0.14);
 }
 
 .task-card,
@@ -702,6 +749,11 @@ button {
   border-radius: 24px;
   text-align: right;
   animation: slide-up 0.4s ease both;
+}
+
+.task-card {
+  display: flex;
+  flex-direction: column;
 }
 
 .task-card:nth-child(1) { animation-delay: 0.05s; }
@@ -778,6 +830,52 @@ button {
   align-items: center;
   gap: 12px;
   margin-top: 16px;
+}
+
+.task-card footer {
+  margin-top: 22px;
+}
+
+.task-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.task-open-button {
+  width: auto;
+  min-width: 190px;
+  min-height: 44px;
+  padding: 10px 24px;
+  font-size: 0.98rem;
+  box-shadow: 0 6px 18px rgba(108, 141, 255, 0.24);
+}
+
+.task-allocation-button {
+  align-self: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.allocation-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.allocation-button.allocated {
+  border-color: rgba(47, 181, 159, 0.28);
+  background: linear-gradient(135deg, rgba(47, 181, 159, 0.14), rgba(108, 141, 255, 0.08), rgba(255, 255, 255, 0.92));
+  color: #1c5a4f;
 }
 
 .mini-progress,
@@ -857,6 +955,22 @@ button {
   gap: 16px;
   align-items: start;
   flex-wrap: wrap;
+}
+
+.question-topline-main {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.question-topline-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.question-allocation-button {
+  min-width: 210px;
 }
 
 .question-counter {
@@ -1117,6 +1231,26 @@ button {
   .result-card footer {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .task-card-actions,
+  .question-topline-side {
+    align-items: stretch;
+  }
+
+  .task-card-actions {
+    justify-content: stretch;
+  }
+
+  .question-allocation-button,
+  .task-open-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .task-allocation-button {
+    width: 100%;
+    min-width: 0;
   }
 
   .question-list {

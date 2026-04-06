@@ -78,15 +78,7 @@ The website must function without any backend or remote service.
 
 1. Multiplayer features.
 2. Online leaderboards.
-3. Teacher dashboard over the internet.
-4. User authentication.
-5. Payments or subscriptions.
-6. Chat or social features.
-7. Adaptive AI-generated questions from a remote service.
-
-## 8. Main User Stories
-
-1. As a child, I want to choose a math topic so I can practice the kind of problems I need.
+3. Teacher
 2. As a child, I want to choose an easy, medium, or harder level so the questions fit me.
 3. As a child, I want to answer one question at a time so I can stay focused.
 4. As a child, I want immediate feedback so I know whether I was correct.
@@ -96,7 +88,15 @@ The website must function without any backend or remote service.
 
 ## 9. Information Architecture
 
-The website should include the following main areas.
+The website should include  dashboard over the internet.
+4. User authentication.
+5. Payments or subscriptions.
+6. Chat or social features.
+7. Adaptive AI-generated questions from a remote service.
+
+## 8. Main User Stories
+
+1. As a child, I want to choose a math topic so I can practice the kind of problems I need.the following main areas.
 
 1. Home page
 2. Topic selection
